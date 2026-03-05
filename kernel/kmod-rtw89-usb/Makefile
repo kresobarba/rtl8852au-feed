@@ -7,21 +7,20 @@ PKG_VERSION:=5.11.1
 PKG_RELEASE:=1
 PKG_MAINTAINER:=You <you@example.com>
 PKG_LICENSE:=GPL-2.0
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/morrownr/rtw89.git
-PKG_SOURCE_VERSION:=main
+
+# Use local directory instead of fetching from Git
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_SOURCE:=rtw89
+PKG_SOURCE_PROTO:=none
 PKG_MIRROR_HASH:=skip
+
 PKG_BUILD_PARALLEL:=1
-
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
-
-include $(INCLUDE_DIR)/kernel.mk
 
 define KernelPackage/kmod-rtw89-usb
   SUBMENU:=Wireless Drivers
   TITLE:=Realtek 8852/8852B USB WiFi driver (rtw89)
   DEPENDS:=+kmod-cfg80211 +kmod-mac80211 +kmod-usb-core
-  FILES:=$(PKG_BUILD_DIR)/rtw89usb.ko
+  FILES:=$(PKG_BUILD_DIR)/usb/rtw89usb.ko
   AUTOLOAD:=$(call AutoProbe,rtw89usb)
 endef
 
@@ -30,7 +29,7 @@ define KernelPackage/kmod-rtw89-usb/description
 endef
 
 define Build/Prepare
-	$(call Build/Prepare/Default)
+	# nothing to fetch
 endef
 
 define Build/Compile
